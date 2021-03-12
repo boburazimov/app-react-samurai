@@ -20,7 +20,7 @@ let Paginator = ({totalItemsCount, pageSize, currentPage, onPageChanged, portion
 
     return (
         <div className={styles.paginator}>
-            {portionNumber > 1 &&
+            {portionNumber > 1 && /* if(portionNumber > 1) {...code} */
             <button onClick={() => {
                 setPortionNumber(portionNumber - 1)
             }}>PREV</button>

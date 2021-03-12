@@ -15,15 +15,13 @@ let User = ({user, ...props}) => {
                     </NavLink>
                 </div>
                 <div>
-                            {user.followed
-                                ?
-                                <button disabled={props.followingInProgress.some(id => id === user.id)} onClick={() => {
-                                    props.follow(user.id);
-                                }}>Unfollow</button>
-                                :
-                                <button disabled={props.followingInProgress.some(id => id === user.id)} onClick={() => {
-                                    props.unfollow(user.id);
-                                }}>Follow</button>}
+                    {user.followed
+                        ? <button disabled={props.followingInProgress.some(id => id === user.id)} onClick={() => {
+                            props.follow(user.id);
+                        }}>Unfollow</button>
+                        : <button disabled={props.followingInProgress.some(id => id === user.id)} onClick={() => {
+                            props.unfollow(user.id);
+                        }}>Follow</button>}
                 </div>
             </span>
             <span>

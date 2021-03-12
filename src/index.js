@@ -13,7 +13,7 @@ import {Provider} from "react-redux";
 
 ReactDOM.render(
     <BrowserRouter>
-        <Provider store={store}>
+        <Provider store={store}> {/*Размешаеть Store в глобальный контекст для доступа всем дочерным. К примеру: тема, локализация (Ру и Уз*/}
             <App/>
         </Provider>
     </BrowserRouter>,

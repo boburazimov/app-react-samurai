@@ -1,43 +1,73 @@
-import React from 'react';
+import React, {useState} from 'react';
 import s from './ProfileInfo.module.css';
 import Preloader from "../../Commons/Preloader/Preloader";
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
+import noPhoto from "./../../../assets/images/no_photo.jpg";
+import ProfileDataForm from "./ProfileDataForm";
 
 const ProfileInfo = (props) => {
 
-    if (!props.profile) {
+    let {profile, status, updateStatus, isOwner, savePhoto, saveProfile} = props;
+
+    const [editMode, setEditMode] = useState(false);
+
+    if (!profile) {
         return <Preloader/>
     }
-    let profile = props.profile
+
+    const onMainPhotoSelected = (e) => {
+        if (e.target.files.length) {
+            savePhoto(e.target.files[0])
+        }
+    }
+
+    const onSubmit = (formData) => {
+        saveProfile(formData).then(
+            () => {
+                setEditMode(false);
+            })
+    }
 
     return (
         <div>
-            {/*<div>*/}
-            {/*    <img*/}
-            {/*        src='https://images.pexels.com/photos/248797/pexels-photo-248797.jpeg?auto=compress&cs=tinysrgb&h=350' alt={"#"}/>*/}
-            {/*</div>*/}
             <div className={s.descriptionBlock}>
-                <div>
-                    <img
-                        src={!profile.photos.large ? 'https://image.shutterstock.com/image-vector/please-no-photo-camera-vector-260nw-473234290.jpg' : profile.photos.large}
-                        alt={"#"}/>
-                    <div><strong>Status: </strong><ProfileStatusWithHooks status={props.status}
-                                                                          updateStatus={props.updateStatus}/></div>
-                </div>
-                <div><strong>About Me: </strong>{profile.aboutMe}</div>
-                <div><h2>Contacts:</h2></div>
-                <div><strong>Facebook: </strong>{profile.contacts.facebook}</div>
-                <div><strong>VK: </strong>{profile.contacts.vk}</div>
-                <div><strong>Twitter: </strong>{profile.contacts.twitter}</div>
-                <div><strong>Instagram: </strong>{profile.contacts.instagram}</div>
-                <div><strong>GitHub: </strong>{profile.contacts.github}</div>
-                <div><h2>Job:</h2></div>
-                <div><strong>Looking for a Job: </strong>{profile.lookingForAJob ?
-                    <span style={{FontSize: '30px'}}>&#129488;</span> :
-                    <span style={{FontSize: '30px'}}>&#128526;</span>}</div>
-                <div><strong>Full Name: </strong>{profile.fullName}</div>
+                <img src={profile.photos.large || noPhoto} alt={"#"}/>
+                {isOwner && <input type={"file"} onChange={onMainPhotoSelected}/>}
+
+                {editMode
+                    ? <ProfileDataForm initialValues={profile} profile={profile} onSubmit={onSubmit}/>
+                    : <ProfileData goToEditMode={() => {
+                        setEditMode(true)
+                    }} profile={profile} isOwner={isOwner}/>}
+
+                <ProfileStatusWithHooks status={status} updateStatus={updateStatus}/>
             </div>
         </div>
+    )
+}
+
+const ProfileData = ({profile, isOwner, goToEditMode}) => {
+    return (
+        <div>
+            {isOwner && <div>
+                <button onClick={goToEditMode}>Edit</button>
+            </div>}
+            <div><b>Full Name</b>: {profile.fullName}</div>
+            <div><b>Looking for a Job</b>: {profile.lookingForAJob ? 'Yes' : 'No'}</div>
+            <div><b>My Prof. Skills</b>: {profile.lookingForAJobDescription}</div>
+            <div><b>About Me</b>: {profile.aboutMe}</div>
+            <div><b>Contacts</b>:
+                {Object.keys(profile.contacts).map(key => {
+                    return <Contacts key={key} contactTitle={key} contactValue={profile.contacts[key]}/>
+                })}
+            </div>
+        </div>
+    )
+}
+
+const Contacts = ({contactTitle, contactValue}) => {
+    return (
+        <div className={s.contact}><b>{contactTitle}</b>: {contactValue}</div>
     )
 }
 

@@ -5,7 +5,13 @@ import SuperMyPostContainer from "./MyPosts/MyPostsContainer";
 const Profile = (props) => {
     return (
         <div>
-            <ProfileInfo profile={props.profile} status={props.status} updateStatus={props.updateStatus}/>
+            <ProfileInfo
+                savePhoto={props.savePhoto}
+                isOwner={props.isOwner}
+                profile={props.profile}
+                status={props.status}
+                saveProfile={props.saveProfile}
+                updateStatus={props.updateStatus}/>
             <SuperMyPostContainer store={props.store}/>
         </div>
     )
